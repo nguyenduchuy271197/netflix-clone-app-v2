@@ -1,8 +1,4 @@
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-} from "firebase/auth";
-import { useState } from "react";
+import { signInWithEmailAndPassword } from "firebase/auth";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import Navbar from "../components/Navbar";
@@ -81,34 +77,13 @@ const SubtitleLink = styled(Link).attrs({ to: "/" })`
 `;
 
 const Home = () => {
-  const [error, setError] = useState("");
   const { register, handleSubmit } = useForm();
   const navigate = useNavigate();
 
   const onSubmit = (data) => {
     signInWithEmailAndPassword(auth, data.email, data.password)
-      .then((userCredential) => {
-        // Signed in
-        const user = userCredential.user;
-        localStorage.set(user, user);
+      .then(() => {
         navigate("/browser");
-      })
-      .catch((error) => {
-        setError(error.errorMessage);
-      });
-  };
-
-  const onClick = () => {
-    createUserWithEmailAndPassword(auth, "huynguyen@gmail.com", "huynguyen")
-      .then((userCredential) => {
-        // Signed in
-        const user = userCredential.user;
-
-        if (user) {
-          navigate("/signin");
-        } else {
-          setError("Sign up fail");
-        }
       })
       .catch((error) => {
         console.log(error);
@@ -130,9 +105,6 @@ const Home = () => {
             New to Netflix?
             <SubtitleLink>Sign up now.</SubtitleLink>
           </SubTitle>
-
-          <button onClick={onClick}>Sign up an account</button>
-          {error}
         </InnerMain>
       </Main>
     </Wrapper>
